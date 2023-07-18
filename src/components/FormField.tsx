@@ -8,7 +8,7 @@ type Props = {
   type?: HTMLInputTypeAttribute;
 };
 
-const TextField: FC<Props> = ({ label, onChange, value, type = "text" }) => (
+const FormField: FC<Props> = ({ label, onChange, value, type = "text" }) => (
   <Stack direction="row" alignItems="center" gap="20px">
     <label>{label}</label>
 
@@ -28,4 +28,4 @@ const TextField: FC<Props> = ({ label, onChange, value, type = "text" }) => (
   </Stack>
 );
 
-export default TextField;
+export default FormField;

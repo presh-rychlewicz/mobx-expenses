@@ -5,11 +5,10 @@ import {
   makeObservable,
   observable,
 } from "mobx";
-import { PLN_TO_EUR_RATE } from "../constants";
 import { roundTo2dp } from "../utils";
-import { ExpenseItem } from "./shared";
+import { ExpenseItem, ExpenseItemExtended } from "./shared";
 
-class Expense {
+export class Expense {
   id = Math.random();
   title = "";
   amountPLN = 0;
@@ -23,24 +22,24 @@ class Expense {
     this.title = title;
     this.amountPLN = amountPLN;
   }
-
-  get amountEUR() {
-    return roundTo2dp(this.amountPLN / PLN_TO_EUR_RATE);
-  }
 }
 
 export class Expenses {
-  expenses: ExpenseItem[] = [];
+  expensesBasic: ExpenseItem[] = [];
+  exchangeRate = 4.382;
 
   constructor(expenses: ExpenseItem[]) {
     makeObservable(this, {
-      expenses: observable,
+      expensesBasic: observable,
+      exchangeRate: observable,
       sum: computed,
+      expenses: computed,
       deleteExpense: action.bound,
       addExpenseToList: action.bound,
+      updateExchangeRate: action.bound,
     });
 
-    this.expenses = expenses;
+    this.expensesBasic = expenses;
   }
 
   get sum() {
@@ -59,26 +58,29 @@ export class Expenses {
     };
   }
 
+  get expenses(): ExpenseItemExtended[] {
+    return this.expensesBasic.map((expense) => ({
+      ...expense,
+      amountEUR: roundTo2dp(expense.amountPLN / this.exchangeRate),
+    }));
+  }
+
   addExpenseToList(
     title: ExpenseItem["title"],
     amountPLN: ExpenseItem["amountPLN"]
   ) {
     const newExpense = new Expense(title, amountPLN);
 
-    this.expenses.push(newExpense);
+    this.expensesBasic.push(newExpense);
   }
 
   deleteExpense(id: ExpenseItem["id"]) {
-    const index = this.expenses.findIndex((expense) => expense.id === id);
+    const index = this.expensesBasic.findIndex((expense) => expense.id === id);
 
-    this.expenses.splice(index, 1);
+    this.expensesBasic.splice(index, 1);
+  }
+
+  updateExchangeRate(value: number) {
+    this.exchangeRate = value;
   }
 }
-
-const expensesStore = new Expenses([
-  new Expense("New book about Rust", 100),
-  new Expense("Snacks for a football match", 20),
-  new Expense("Bus ticket", 2.55),
-]);
-
-export default expensesStore;

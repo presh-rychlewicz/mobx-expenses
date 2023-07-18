@@ -7,13 +7,14 @@ import { FC } from "react";
 import { Currencies } from "../constants";
 import { Button } from "@mui/material";
 import { Expenses } from "../stores";
+import { observer } from "mobx-react";
 
 type Props = {
   expenses: Expenses["expenses"];
   deleteExpense: Expenses["deleteExpense"];
 };
 
-const ExpensesTable: FC<Props> = ({ deleteExpense, expenses }) => (
+const ExpensesTable = observer<FC<Props>>(({ deleteExpense, expenses }) => (
   <Table>
     <TableHead>
       <TableRow>
@@ -44,6 +45,6 @@ const ExpensesTable: FC<Props> = ({ deleteExpense, expenses }) => (
       ))}
     </TableBody>
   </Table>
-);
+));
 
 export default ExpensesTable;

@@ -1,5 +1,3 @@
-export { default as expensesStore } from "./expensesStore";
-export * from "./expensesStore";
-
-export { default as addExpenseStore } from "./addExpenseStore";
 export * from "./addExpenseStore";
+export * from "./expensesStore";
+export * from "./updateExchangeRateStore";

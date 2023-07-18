@@ -1,8 +1,15 @@
 import { Stack } from "@mui/material";
-import { Currencies, PLN_TO_EUR_RATE } from "../constants";
+import { observer } from "mobx-react";
+import { FC } from "react";
+import { Currencies } from "../constants";
+import { Expenses } from "../stores";
 
-const Header = () => {
-  const currencyRatio = `1 ${Currencies.EUR} = ${PLN_TO_EUR_RATE} ${Currencies.PLN}`;
+type Props = {
+  exchangeRate: Expenses["exchangeRate"];
+};
+
+const Header = observer<FC<Props>>(({ exchangeRate }) => {
+  const currencyRatio = `1 ${Currencies.EUR} = ${exchangeRate} ${Currencies.PLN}`;
 
   return (
     <Stack direction="row" alignItems="center" justifyContent="space-between">
@@ -11,6 +18,6 @@ const Header = () => {
       <p>{currencyRatio}</p>
     </Stack>
   );
-};
+});
 
 export default Header;

@@ -25,7 +25,3 @@ export class AddExpense {
     this.amountPLN = this.initialAmountPlnValue;
   }
 }
-
-const addExpenseStore = new AddExpense();
-
-export default addExpenseStore;
