@@ -16,7 +16,12 @@ const TextField: FC<Props> = ({ label, onChange, value, type = "text" }) => (
       id="my-input"
       onChange={(event) => onChange(event.target.value)}
       size="small"
-      type={type}
+      type={"number"}
+      {...(type === "number" && {
+        inputProps: {
+          step: "0.01",
+        },
+      })}
       value={value}
       variant="outlined"
     />

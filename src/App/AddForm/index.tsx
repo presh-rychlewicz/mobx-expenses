@@ -25,14 +25,26 @@ const AddForm = observer<FC<Props>>(({ addExpenseStore, addExpenseToList }) => (
         <TextField
           type="number"
           label={`Amount (in ${Currencies.PLN})`}
-          onChange={(value) =>
-            addExpenseStore.updateAmountPLN(parseFloat(value))
-          }
+          onChange={(value) => {
+            let parsedValue = 0;
+            if (value) {
+              const [decimals, fraction] = value.split(DOT_CHAR);
+              const valueWithSlicedFraction =
+                decimals + (fraction ? DOT_CHAR + fraction.slice(0, 2) : "");
+
+              parsedValue = parseFloat(valueWithSlicedFraction);
+            }
+
+            addExpenseStore.updateAmountPLN(parsedValue);
+          }}
           value={addExpenseStore.amountPLN.toString()}
         />
 
         <Button
-          disabled={!addExpenseStore.title || !addExpenseStore.amountPLN}
+          disabled={
+            addExpenseStore.title.length < TITLE_MIN_CHAR ||
+            !addExpenseStore.amountPLN
+          }
           onClick={() => {
             addExpenseToList(addExpenseStore.title, addExpenseStore.amountPLN);
             addExpenseStore.resetForm();
@@ -45,5 +57,8 @@ const AddForm = observer<FC<Props>>(({ addExpenseStore, addExpenseToList }) => (
     </Stack>
   </FormControl>
 ));
+
+const TITLE_MIN_CHAR = 5;
+const DOT_CHAR = ".";
 
 export default AddForm;
